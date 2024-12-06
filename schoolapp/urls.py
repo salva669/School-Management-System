@@ -4,7 +4,7 @@ from school import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('', views.ShowLoginPage, name='login_page'),
+    path('', views.ShowLoginPage, name='show_login'),
     path('get_user_details', views.GetUserDetails),
     path('logout_user', views.logout_user,name="logout"),
     path('doLogin',views.doLogin,name="do_login"),
@@ -32,7 +32,10 @@ urlpatterns = [
 
 #     Staff URL Path
     path('staff_home', StaffViews.staff_home, name="staff_home"),
-
+    path('staff_apply_leave', StaffViews.staff_apply_leave, name="staff_apply_leave"),
+    path('staff_apply_leave_save', StaffViews.staff_apply_leave_save, name="staff_apply_leave_save"),
+    path('staff_feedback', StaffViews.staff_feedback, name="staff_feedback"),
+    path('staff_feedback_save', StaffViews.staff_feedback_save, name="staff_feedback_save"),
 #     Student URL Path
     path('student_home', StudentViews.student_home, name="student_home"),
 
