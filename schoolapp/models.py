@@ -52,29 +52,12 @@ class Students(models.Model):
     updated_at=models.DateTimeField(auto_now_add=True)
     objects = models.Manager()
 
-class Attendance(models.Model):
-    id=models.AutoField(primary_key=True)
-    subject_id=models.ForeignKey(Subjects,on_delete=models.DO_NOTHING)
-    attendance_date=models.DateTimeField(auto_now_add=True)
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now_add=True)
-    objects = models.Manager()
-
-class AttendanceReport(models.Model):
-    id=models.AutoField(primary_key=True)
-    student_id=models.ForeignKey(Students,on_delete=models.DO_NOTHING)
-    attendance_id=models.ForeignKey(Attendance,on_delete=models.CASCADE)
-    status=models.BooleanField(default=False)
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now_add=True)
-    objects=models.Manager()
-
 class LeaveReportStudent(models.Model):
     id=models.AutoField(primary_key=True)
     student_id=models.ForeignKey(Students,on_delete=models.CASCADE)
     leave_date=models.CharField(max_length=255)
     leave_message=models.TextField()
-    leave_status=models.BooleanField(default=False)
+    leave_status=models.IntegerField(default=0)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
     objects=models.Manager()
@@ -84,7 +67,7 @@ class LeaveReportStaff(models.Model):
     staff_id = models.ForeignKey(Staffs, on_delete=models.CASCADE)
     leave_date = models.CharField(max_length=255)
     leave_message = models.TextField()
-    leave_status = models.BooleanField(default=False)
+    leave_status = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     objects = models.Manager()
@@ -122,7 +105,16 @@ class NotificationStaffs(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     objects = models.Manager()
-
+class StudentResult(models.Model):
+    id=models.AutoField(primary_key=True)
+    student_id=models.ForeignKey(Students,on_delete=models.CASCADE)
+    subject_id=models.ForeignKey(Subjects,on_delete=models.CASCADE)
+    subject_exam_marks=models.FloatField(default=0)
+    subject_assignment_marks=models.FloatField(default=0)
+    created_at=models.DateField(auto_now_add=True)
+    updated_at=models.DateField(auto_now_add=True)
+    objects=models.Manager()
+    
 @receiver(post_save,sender=CustomUser)
 def create_user_profile(sender,instance,created,**kwargs):
     if created:

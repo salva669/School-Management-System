@@ -31,7 +31,7 @@ def staff_home(request):
     leave_count=LeaveReportStaff.objects.filter(staff_id=staff.id,leave_status=1).count()
     subject_count=subjects.count()
 
-    return render(request,"staff_template/staff_home_template.html",{"students_count":students_count,"leave_count":leave_count,"subject_count":subject_count,"subject_list":subject_list,"student_list":student_list})
+    return render(request,"staff_template/staff_home_template.html",{"students_count":students_count,"leave_count":leave_count,"subject_count":subject_count})
 
 def staff_apply_leave(request):
     staff_obj = Staffs.objects.get(admin=request.user.id)
