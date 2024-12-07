@@ -137,3 +137,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTHENTICATION_BACKENDS=['schoolapp.EmailBackEnd.EmailBackEnd']
 AUTH_USER_MODEL="schoolapp.CustomUser"
+
+# EMAIL_HOST="smtp.gmail.com"
+# EMAIl_PORT=587
+# EMAIL_HOST_USER="GMAIL_EMAIL"
+# EMAIL_HOST_PASSWORD="GMAIL PASSWORD"
+# EMAIL_USE_TLS=True
+# DEFAULT_FROM_EMAIL="Student management System <GMAIl_EMAIL>"
