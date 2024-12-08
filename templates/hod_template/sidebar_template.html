@@ -117,22 +117,24 @@
               </p>
             </a>
           </li>
-           <li class="nav-item">
-           
-              <i class="nav-icon fas fa-th"></i>
-              <p>
-                Student Leave
-              </p>
-            </a>
-          </li>
-            <li class="nav-item">
-         
-              <i class="nav-icon fas fa-th"></i>
-              <p>
-                Staff Leave
-              </p>
-            </a>
-          </li>
+         <li class="nav-item">
+              {% url 'staff_leave_view' as staff_leave_view %}
+         <a href="{% url 'staff_leave_view' %}" class="nav-link {% if request.path == staff_leave_view %} active {% endif %}">
+           <i class="nav-icon fas fa-th"></i>
+           <p>
+             Staff Leave
+           </p>
+         </a>
+       </li>
+       <li class="nav-item">
+        {% url 'student_leave_view' as student_leave_view %}
+     <a href="{% url 'student_leave_view' %}" class="nav-link {% if request.path == student_leave_view %} active {% endif %}">
+       <i class="nav-icon fas fa-th"></i>
+       <p>
+         Student Leave
+       </p>
+     </a>
+   </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
