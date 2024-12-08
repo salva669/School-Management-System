@@ -29,6 +29,8 @@ urlpatterns = [
     path('edit_subject_save', HodViews.edit_subject_save,name="edit_subject_save"),
     path('edit_course/<str:course_id>', HodViews.edit_course,name="edit_course"),
     path('edit_course_save', HodViews.edit_course_save,name="edit_course_save"),
+    path('check_email_exist', HodViews.check_email_exist,name="check_email_exist"),
+    path('check_username_exist', HodViews.check_username_exist,name="check_username_exist"),
 
 #     Staff URL Path
     path('staff_home', StaffViews.staff_home, name="staff_home"),
@@ -36,7 +38,12 @@ urlpatterns = [
     path('staff_apply_leave_save', StaffViews.staff_apply_leave_save, name="staff_apply_leave_save"),
     path('staff_feedback', StaffViews.staff_feedback, name="staff_feedback"),
     path('staff_feedback_save', StaffViews.staff_feedback_save, name="staff_feedback_save"),
+
 #     Student URL Path
     path('student_home', StudentViews.student_home, name="student_home"),
+    path('student_apply_leave', StudentViews.student_apply_leave, name="student_apply_leave"),
+    path('student_apply_leave_save', StudentViews.student_apply_leave_save, name="student_apply_leave_save"),
+    path('student_feedback', StudentViews.student_feedback, name="student_feedback"),
+    path('student_feedback_save', StudentViews.student_feedback_save, name="student_feedback_save"),
 
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)+static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
