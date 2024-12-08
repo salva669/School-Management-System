@@ -98,30 +98,22 @@
               </p>
             </a>
           </li>
-           <li class="nav-item">
-            
-              <i class="nav-icon fas fa-th"></i>
-              <p>
-                View Attendance
-                <span class="right badge badge-danger">New</span>
-              </p>
-            </a>
+          <li class="nav-item">
+            {% url 'staff_feedback_message' as staff_feedback_message %}
+            <a href="{% url 'staff_feedback_message' %}" class="nav-link {% if request.path == staff_feedback_message %} active {% endif %}">
+            <i class="nav-icon fas fa-th"></i>
+            <p>
+              Staff Feedback
+              <!-- <span class="right badge badge-danger">New</span> -->
+            </p>
+          </a>
           </li>
            <li class="nav-item">
-         
+            {% url 'student_feedback_message' as student_feedback_message %}
+            <a href="{% url 'student_feedback_message' %}" class="nav-link {% if request.path == student_feedback_message %} active {% endif %}">
               <i class="nav-icon fas fa-th"></i>
               <p>
                 Student Feedback
-                <span class="right badge badge-danger">New</span>
-              </p>
-            </a>
-          </li>
-           <li class="nav-item">
-           
-              <i class="nav-icon fas fa-th"></i>
-              <p>
-                Staff Feedback
-                <span class="right badge badge-danger">New</span>
               </p>
             </a>
           </li>
@@ -130,7 +122,6 @@
               <i class="nav-icon fas fa-th"></i>
               <p>
                 Student Leave
-                <span class="right badge badge-danger">New</span>
               </p>
             </a>
           </li>
@@ -139,7 +130,6 @@
               <i class="nav-icon fas fa-th"></i>
               <p>
                 Staff Leave
-                <span class="right badge badge-danger">New</span>
               </p>
             </a>
           </li>
