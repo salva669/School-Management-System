@@ -7,7 +7,17 @@ from django.views.decorators.csrf import csrf_exempt
 from schoolapp.models import Students, Courses, Subjects, CustomUser, LeaveReportStudent, FeedBackStudent, NotificationStudent, StudentResult
 
 def student_home(request):
-    return render(request,"student_template/student_home_template.html")
+    student_obj=Students.objects.get(admin=request.user.id)
+    course=Courses.objects.get(id=student_obj.course_id.id)
+    subjects=Subjects.objects.filter(course_id=course).count()
+    subjects_data=Subjects.objects.filter(course_id=course)
+    
+    subject_name=[]
+    subject_data=Subjects.objects.filter(course_id=student_obj.course_id)
+    for subject in subject_data:
+        subject_name.append(subject.subject_name)
+
+    return render(request,"student_template/student_home_template.html",{"subjects":subjects,"data_name":subject_name})
 
 def student_apply_leave(request):
     staff_obj = Students.objects.get(admin=request.user.id)
