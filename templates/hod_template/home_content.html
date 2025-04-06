@@ -87,22 +87,25 @@ Home
                 </div>
               </div>
               <div class="col-lg-6">
-                   <div class="card card-success">
+                <div class="card card-primary">
                   <div class="card-header">
-                    <h3 class="card-title">Total Subject in Each Courses</h3>
-
+                    <h3 class="card-title">Total Subjects per Course (Bar Chart)</h3>
                     <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
                       </button>
-                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                      <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                      </button>
                     </div>
                   </div>
                   <div class="card-body">
-                    <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    <canvas id="barChart" style="min-height: 300px; height: 300px; max-height: 400px; width: 100%;"></canvas>
                   </div>
                   <!-- /.card-body -->
                 </div>
               </div>
+              
           </div>
           <div class="row">
               <div class="col-lg-6">
@@ -150,10 +153,17 @@ Home
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+<!-- Load dependencies -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
 <script>
-  $(document).ready(function()
-  {
+  $(document).ready(function() {
+    // -------- Pie Chart: Student vs Staff -------- //
     var studentCount = Number("{{ student_count|default:'0' }}");
     var staffCount = Number("{{ staff_count|default:'0' }}");
 
@@ -162,8 +172,8 @@ Home
         console.error("Canvas element with id 'pieChart' not found.");
         return;
     }
-    
-    var ctx = pieChartCanvas.getContext('2d');
+
+    var pieCtx = pieChartCanvas.getContext('2d');
 
     if (!isNaN(studentCount) && !isNaN(staffCount)) {
         var pieData = {
@@ -174,68 +184,89 @@ Home
             }]
         };
 
-        var pieChart = new Chart(ctx, {
+        var pieChart = new Chart(pieCtx, {
             type: 'pie',
             data: pieData,
             options: {
                 maintainAspectRatio: false,
                 responsive: true,
-            }
+                plugins: {
+                    datalabels: {
+                        formatter: (value, context) => {
+                            const data = context.chart.data.datasets[0].data;
+                            const total = data.reduce((a, b) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return percentage + '%';
+                        },
+                        color: '#fff',
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
         });
     } else {
         console.error("Invalid data for pie chart.");
     }
 
-    //Second Chart for Total Subject in Each Course
+    // -------- Bar Chart: Subjects per Course -------- //
+    try {
+        var subject_count_list = {{ subject_count_list|safe }};
+        var course_name_list = {{ course_name_list|safe }};
 
-    var subjectCountList = {{ subject_count_list|safe }};  // Ensure it is a valid JSON list
-    var courseNameList = {{ course_name_list|safe }};  // Ensure it is a valid JSON list
+        var barChartCanvas = $('#barChart').get(0);
+        if (!barChartCanvas) {
+            console.error("Canvas element with id 'barChart' not found.");
+            return;
+        }
 
-    var barChartCanvas = $('#barChart').get(0);
-    if (!barChartCanvas) {
-        console.error("Canvas element with id 'barChart' not found.");
-        return;
-    }
+        var barCtx = barChartCanvas.getContext('2d');
 
-    var ctx = barChartCanvas.getContext('2d');
+        var barData = {
+            labels: course_name_list,
+            datasets: [{
+                label: 'Number of Subjects',
+                data: subject_count_list,
+                backgroundColor: '#3c8dbc',
+                borderColor: '#2c6ba0',
+                borderWidth: 1
+            }]
+        };
 
-    var barData = {
-        labels: courseNameList,
-        datasets: [{
-            label: 'Number of Subjects',
-            data: subjectCountList,
-            backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
-            borderWidth: 1
-        }]
-    };
-
-    var barOptions = {
-        maintainAspectRatio: false,
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    stepSize: 1  // Ensure only whole numbers are displayed
-                }
-            },
-            x: {
-                ticks: {
-                    autoSkip: false,
-                    maxRotation: 45,  // Rotate labels for better readability
-                    minRotation: 30
+        var barOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+            
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                },
+                x: {
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 45,
+                        minRotation: 30
+                    }
                 }
             }
-        }
-    };
+        };
 
-    var barChart = new Chart(ctx, {
-        type: 'bar',
-        data: barData,
-        options: barOptions
-    });
+        var barChart = new Chart(barCtx, {
+            type: 'bar',
+            data: barData,
+            options: barOptions,
+            
+        });
+    } catch (err) {
+        console.error("Error rendering bar chart:", err);
+    }
   });
-
-    
 </script>
+
 {% endblock custom_js %}
