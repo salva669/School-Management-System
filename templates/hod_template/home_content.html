@@ -147,32 +147,95 @@ Home
     <!-- /.content -->
 {% endblock main_content %}
 {% block custom_js %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-  $(document).ready(function(){
-    var pieData = {
-      labels: [
-          'Students',
-          'Staff',
-      ],
-      datasets: [
-        {
-          data: [600,500],
-          backgroundColor : ['#00c0ef', '#00a65a'],
+  $(document).ready(function()
+  {
+    var studentCount = Number("{{ student_count|default:'0' }}");
+    var staffCount = Number("{{ staff_count|default:'0' }}");
+
+    var pieChartCanvas = $('#pieChart').get(0);
+    if (!pieChartCanvas) {
+        console.error("Canvas element with id 'pieChart' not found.");
+        return;
+    }
+    
+    var ctx = pieChartCanvas.getContext('2d');
+
+    if (!isNaN(studentCount) && !isNaN(staffCount)) {
+        var pieData = {
+            labels: ['Students', 'Staff'],
+            datasets: [{
+                data: [studentCount, staffCount],
+                backgroundColor: ['#00c0ef', '#00a65a'],
+            }]
+        };
+
+        var pieChart = new Chart(ctx, {
+            type: 'pie',
+            data: pieData,
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+            }
+        });
+    } else {
+        console.error("Invalid data for pie chart.");
+    }
+
+    //Second Chart for Total Subject in Each Course
+
+    var subjectCountList = {{ subject_count_list|safe }};  // Ensure it is a valid JSON list
+    var courseNameList = {{ course_name_list|safe }};  // Ensure it is a valid JSON list
+
+    var barChartCanvas = $('#barChart').get(0);
+    if (!barChartCanvas) {
+        console.error("Canvas element with id 'barChart' not found.");
+        return;
+    }
+
+    var ctx = barChartCanvas.getContext('2d');
+
+    var barData = {
+        labels: courseNameList,
+        datasets: [{
+            label: 'Number of Subjects',
+            data: subjectCountList,
+            backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+            borderWidth: 1
+        }]
+    };
+
+    var barOptions = {
+        maintainAspectRatio: false,
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1  // Ensure only whole numbers are displayed
+                }
+            },
+            x: {
+                ticks: {
+                    autoSkip: false,
+                    maxRotation: 45,  // Rotate labels for better readability
+                    minRotation: 30
+                }
+            }
         }
-      ]
-    }
-    var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-    var pieOptions     = {
-      maintainAspectRatio : false,
-      responsive : true,
-    }
-    //Create pie or douhnut chart
-    // You can switch between pie and douhnut using the method below.
-    var pieChart = new Chart(pieChartCanvas, {
-      type: 'pie',
-      data: pieData,
-      options: pieOptions
-    })
-  })
+    };
+
+    var barChart = new Chart(ctx, {
+        type: 'bar',
+        data: barData,
+        options: barOptions
+    });
+  });
+
+    
 </script>
 {% endblock custom_js %}
